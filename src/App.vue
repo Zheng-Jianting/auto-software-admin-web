@@ -1,5 +1,5 @@
 <template>
-
+  <router-view />
 </template>
 
 <script>
@@ -7,7 +7,3 @@
     name: 'App'
   }
 </script>
-
-<style>
-
-</style>
