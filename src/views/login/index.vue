@@ -1,5 +1,9 @@
 <template>
   <div class="body">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap">
+
     <div class="section">
       <div class="container">
         <div class="row full-height justify-content-center">
@@ -19,7 +23,7 @@
                           <input type="password" name="logpass" class="form-style" placeholder="Your Password" id="logpass" autocomplete="off">
                           <i class="input-icon uil uil-lock-alt"></i>
                         </div>
-                        <a href="#" class="btn mt-4">submit</a>
+                        <a href="#" class="btn mt-4" @click.prevent="submit">submit</a>
                           <p class="mb-0 mt-4 text-center">
                             <a href="#0" class="link">Forgot your password?</a>
                           </p>
@@ -38,7 +42,12 @@
 
 <script>
   export default {
-    name: 'Login'
+    name: 'Login',
+    methods: {
+      submit() {
+        this.$router.push('/dashboard')
+      }
+    }
   }
 </script>
 
@@ -50,7 +59,7 @@
     line-height: 1.7;
     color: #c4c3ca;
     background-color: #1f2029;
-    background-image: url("../../../assets/ml.png");
+    background-image: url("@/assets/ml.png");
     background-size:cover;
     overflow-x: hidden;
     background-attachment: fixed;
@@ -154,7 +163,7 @@
     width: 100%;
     height: 100%;
     background-color: #2a2b38;
-    background-image: url('../../../assets/card_img.jpg');
+    background-image: url('@/assets/card_img.jpg');
     background-position: bottom center;
     background-repeat: no-repeat;
     background-size: 300%;
