@@ -26,6 +26,7 @@ export const constantRoutes = [
   {
     path: '/management/login',
     component: Layout,
+    redirect: '/management/login/index',
     children: [
       {
         path: 'index',
@@ -61,6 +62,7 @@ export const constantRoutes = [
   {
     path: '/management/project',
     component: Layout,
+    redirect: '/management/project/index',
     children: [
       {
         path: 'index',
@@ -74,6 +76,7 @@ export const constantRoutes = [
   {
     path: '/statistics',
     component: Layout,
+    redirect: '/statistics/index',
     children: [
       {
         path: 'index',
