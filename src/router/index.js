@@ -74,6 +74,21 @@ export const constantRoutes = [
   },
 
   {
+    path: '/management/project/record',
+    component: Layout,
+    redirect: '/management/project/record/index',
+    children: [
+      {
+        path: 'index',
+        name: 'ProjectRecord',
+        component: () => import('@/views/management/project/record/index'),
+        meta: { title: '项目详情' }
+      }
+    ],
+    hidden: true
+  },
+
+  {
     path: '/statistics',
     component: Layout,
     redirect: '/statistics/index',
