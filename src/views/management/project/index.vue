@@ -1,62 +1,152 @@
 <template>
   <div class="flex-center">
     <div class="content">
-      <el-input placeholder="请输入项目名称" v-model="searchProjectName" suffix-icon="el-icon-search" class="input" />
+      <el-input placeholder="请输入项目名称" v-model="searchProjectName" prefix-icon="el-icon-search" clearable class="input" @keyup.enter.native="serchProject" />
+
       <el-table :data="projects" border stripe>
-        <el-table-column align="center" prop="id" label="序号" width="75" />
-        <el-table-column align="center" prop="name" label="用户" width="120" />
-        <el-table-column align="center" prop="projectName" label="项目名称" width="150" />
-        <el-table-column align="center" prop="module" label="模块来源" width="120" />
-        <el-table-column align="center" prop="creationDate" label="创建时间" width="210" />
-        <el-table-column align="center" prop="lastUpdateDate" label="最后更新时间" width="210" />
-        <el-table-column align="center" prop="status" label="状态" width="100" />
-        <el-table-column align="center" label="操作" width="230">
+        <el-table-column align="center" prop="id" label="ID" width="154" />
+        <el-table-column align="center" prop="username" label="用户名称" width="160" />
+        <el-table-column align="center" prop="projectName" label="项目名称" width="200" />
+        <el-table-column align="center" prop="fromModule" label="模块来源" width="140" />
+        <el-table-column align="center" label="创建时间" width="200">
+          <template slot-scope="scope">
+            <i class="el-icon-time"></i>
+            <span style="margin-left: 10px">{{ scope.row.created }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="updated" label="最后更新时间" width="200">
+          <template slot-scope="scope">
+            <i class="el-icon-time"></i>
+            <span style="margin-left: 10px">{{ scope.row.updated }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="status" label="状态" width="100">
+          <template slot-scope="scope">
+            {{ scope.row.status === 1 ? '启用' : '禁用' }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="操作" width="300">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="viewProjectRecord(scope.row)">详情</el-button>
+            <el-button size="mini" type="primary" @click="openUpdateProjectDialog(scope.row)">编辑</el-button>
             <el-button size="mini" type="primary" @click="downloadProject">下载</el-button>
-            <el-button size="mini" type="danger" @click="deleteProject(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" type="danger" @click="deleteProject(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
+
       <el-pagination
         class="pagination"
         layout="total, prev, pager, next, jumper"
-        :total="100"
-        :page-size="10"
-        :current-page.sync="currentPage"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange">
+        :total="pagination.total"
+        :page-size="pagination.params['page-size']"
+        :current-page.sync="pagination.params['page-index']"
+        @size-change="pageProject"
+        @current-change="pageProject">
       </el-pagination>
     </div>
+
+    <el-dialog width="35%" title="编辑项目基本信息" :visible.sync="updateProjectDialogVisible" @close="pageProject">
+      <el-form :model="updateProject">
+        <el-form-item label="ID" label-width="200px">
+          <el-input style="width: 80%;" disabled v-model="updateProject.id" />
+        </el-form-item>
+        <el-form-item label="用户名称" label-width="200px">
+          <el-input style="width: 80%;" disabled v-model="updateProject.username" />
+        </el-form-item>
+        <el-form-item label="项目名称" label-width="200px">
+          <el-input style="width: 80%;" v-model="updateProject.projectName" />
+        </el-form-item>
+        <el-form-item label="模块来源" label-width="200px">
+          <el-input style="width: 80%;" disabled v-model="updateProject.fromModule" />
+        </el-form-item>
+        <el-form-item label="创建时间" label-width="200px">
+          <el-input style="width: 80%;" disabled v-model="updateProject.created" />
+        </el-form-item>
+        <el-form-item label="最后更新时间" label-width="200px">
+          <el-input style="width: 80%;" disabled v-model="updateProject.updated" />
+        </el-form-item>
+        <el-form-item label="状态" label-width="200px">
+          <el-select style="width: 20%;" v-model="updateProject.status" :placeholder="updateProject.status === 1 ? '启用' : '禁用'">
+            <el-option label="启用" :value="1"></el-option>
+            <el-option label="禁用" :value="0"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancelUpdateProject">取消</el-button>
+        <el-button type="primary" @click="confirmUpdateProject">确定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+  import { pageProject, findProjectByName, updateProjectBasicInfo, deleteProject } from '@/network/project-mgmt'
+
   export default {
     name: 'ProjectManagement',
     data() {
       return {
         searchProjectName: '',
         projects: [],
-        currentPage: 1
+        pagination: {
+          total: 0,
+          params: {
+            'page-index': 1,
+            'page-size': 10
+          }
+        },
+        updateProject: {},
+        updateProjectDialogVisible: false
       }
     },
     methods: {
+      assignProjectPagination(response) {
+        this.projects = response.data.data.projects
+        this.pagination = {
+          total: response.data.data.total,
+          params: {
+            'page-index': response.data.data.pageIndex,
+            'page-size': response.data.data.pageSize
+          }
+        }
+      },
+      serchProject() {
+        findProjectByName(this.searchProjectName, this.pagination.params).then(response => this.assignProjectPagination(response))
+      },
+      pageProject() {
+        pageProject(this.pagination.params).then(response => this.assignProjectPagination(response))
+      },
       viewProjectRecord(project) {
         this.$router.push({
           path: '/management/project/record',
           query: { projectId: project.id, module: 'mindMap' }
         })
       },
+      openUpdateProjectDialog(project) {
+        this.updateProject = project
+        this.updateProjectDialogVisible = true
+      },
+      cancelUpdateProject() {
+        this.updateProjectDialogVisible = false
+        this.pageProject()
+      },
+      confirmUpdateProject() {
+        this.updateProjectDialogVisible = false
+        updateProjectBasicInfo(this.updateProject).then(_ => this.pageProject()) // eslint-disable-line no-unused-vars
+      },
+      updateProjectBasicInfo() {},
       downloadProject() {},
-      deleteProject() {},
-      handleSizeChange() {},
-      handleCurrentChange() {}
+      deleteProject(project) {
+        this.$confirm('项目删除后不可恢复，请问是否删除？')
+          .then(_ => deleteProject(project.id).then(_ => this.pageProject())) // eslint-disable-line no-unused-vars
+          .catch(_ => {}) // eslint-disable-line no-unused-vars
+      }
     },
     created() {
-      for (let i = 0; i < 10; i++) {
-        this.projects.push({ id: i + 1, name: '张三', projectName: '教务系统', module: 'mindMap', creationDate: '2023-01-01 00:00:00', lastUpdateDate: '2023-01-01 00:00:00', status: '正常' })
-      }
+      this.pageProject()
     }
   }
 </script>
