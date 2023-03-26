@@ -1,9 +1,9 @@
 <template>
   <div class="flex-center tab-container">
     <div style="flex-direction: row;">
-      <el-tag class="tag">用户：{{project.name}}</el-tag>
-      <el-tag class="tag">项目名称：{{project.projectName}}</el-tag>
-      <el-tag class="tag">模块来源：{{project.module}}</el-tag>
+      <el-tag class="tag">用户：{{ project.username }}</el-tag>
+      <el-tag class="tag">项目名称：{{ project.projectName }}</el-tag>
+      <el-tag class="tag">模块来源：{{ project.fromModule }}</el-tag>
     </div>
     <el-tabs class="tabs" v-model="activeModule" type="border-card">
       <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :name="item.key" :label="item.label">
@@ -24,31 +24,28 @@
     data() {
       return {
         project: {},
+        activeModule: 'mindMap',
         tabMapOptions: [
           { key: 'mindMap', label: '思维导图' },
-          { key: 'usercaseDiagram', label: '用例图' },
+          { key: 'useCaseDiagram', label: '用例图' },
           { key: 'activityDiagram', label: '活动图' },
           { key: 'erDiagram', label: 'ER图' },
-          { key: 'uiDiagram', label: '软件原型自动设计' },
-          { key: 'autoCode', label: '自动编码实现' }
-        ],
-        projectId: '',
-        activeModule: 'mindMap'
+          { key: 'uiDiagram', label: 'UI组件布局图' },
+          { key: 'autoCode', label: '自动代码生成' }
+        ]
       }
     },
     watch: {
       activeModule(val) {
         this.$router.push({
-          path: this.$route.path,
-          query: { projectId: this.projectId, module: val }
+          name: 'ProjectRecord',
+          query: { id: this.project.id, module: val }, // just let url display project id and active module
         })
       }
     },
     created() {
-      this.projectId = this.$route.query.projectId
-      this.activeModule = this.$route.query.module
-      // get project info using axios with projectId
-      this.project = { name: '张三', projectName: '教务系统', module: 'mindMap' }
+      this.project = this.$route.params.project
+      this.activeModule = this.$route.params.defaultModule
     }
   }
 </script>

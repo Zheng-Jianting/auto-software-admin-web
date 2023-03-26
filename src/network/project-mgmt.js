@@ -34,3 +34,28 @@ export function deleteProject(id) {
     method: 'delete'
   })
 }
+
+// Project Record Management
+
+export function pageProjectRecord(id, module, params) {
+  return request({
+    url: baseURL + '/api/project/' + id + '/record/' + module,
+    method: 'get',
+    params
+  })
+}
+
+export function updateProjectRecord(newRecord) {
+  return request({
+    url: baseURL + '/api/project/record',
+    method: 'put',
+    data: newRecord
+  })
+}
+
+export function deleteProjectRecord(projectId, module, recordId) {
+  return request({
+    url: baseURL + '/api/project/' + projectId + '/record/' + module + '/' + recordId,
+    method: 'delete'
+  })
+}

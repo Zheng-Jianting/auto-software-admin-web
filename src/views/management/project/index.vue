@@ -4,7 +4,7 @@
       <el-input placeholder="请输入项目名称" v-model="searchProjectName" prefix-icon="el-icon-search" clearable class="input" @keyup.enter.native="serchProject" />
 
       <el-table :data="projects" border stripe>
-        <el-table-column align="center" prop="id" label="ID" width="154" />
+        <el-table-column align="center" prop="id" label="ID" width="155" />
         <el-table-column align="center" prop="username" label="用户名称" width="160" />
         <el-table-column align="center" prop="projectName" label="项目名称" width="200" />
         <el-table-column align="center" prop="fromModule" label="模块来源" width="140" />
@@ -121,8 +121,9 @@
       },
       viewProjectRecord(project) {
         this.$router.push({
-          path: '/management/project/record',
-          query: { projectId: project.id, module: 'mindMap' }
+          name: 'ProjectRecord',
+          query: { id: project.id, module: 'mindMap' }, // just let url display project id and active module
+          params: { project, defaultModule: 'mindMap' } // actually pass the parameters
         })
       },
       openUpdateProjectDialog(project) {
@@ -141,8 +142,8 @@
       downloadProject() {},
       deleteProject(project) {
         this.$confirm('项目删除后不可恢复，请问是否删除？')
-          .then(_ => deleteProject(project.id).then(_ => this.pageProject())) // eslint-disable-line no-unused-vars
-          .catch(_ => {}) // eslint-disable-line no-unused-vars
+            .then(_ => deleteProject(project.id).then(_ => this.pageProject())) // eslint-disable-line no-unused-vars
+            .catch(_ => {}) // eslint-disable-line no-unused-vars
       }
     },
     created() {
