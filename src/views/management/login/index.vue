@@ -1,51 +1,83 @@
 <template>
   <div class="flex-center">
     <div class="content">
-      <el-input placeholder="请输入用户名" v-model="searchName" suffix-icon="el-icon-search" class="input" />
+      <el-input placeholder="请输入用户名称" v-model="searchName" prefix-icon="el-icon-search" clearable class="input" @keyup.enter.native="searchLoginRecord" />
+
       <el-table :data="loginRecords" border stripe>
-        <el-table-column align="center" prop="id" label="序号" width="75" />
-        <el-table-column align="center" prop="name" label="用户" width="120" />
-        <el-table-column align="center" prop="ip" label="IP" width="140" />
-        <el-table-column align="center" prop="ipCity" label="IP属地" width="120" />
-        <el-table-column align="center" prop="loginCount" label="登录次数" width="100" />
-        <el-table-column align="center" prop="lastLoginDate" label="上次登录时间" width="210" />
-        <el-table-column align="center" prop="latestLoginDate" label="最近登录时间" width="210" />
+        <el-table-column align="center" prop="id" label="ID" width="80" />
+        <el-table-column align="center" prop="username" label="用户名称" width="150" />
+        <el-table-column align="center" prop="ipAddress" label="IP地址" width="150" />
+        <el-table-column align="center" prop="ipProvince" label="IP地址所属省份" width="150" />
+        <el-table-column align="center" prop="ipCity" label="IP地址所属城市" width="150" />
+        <el-table-column align="center" label="登录时间" width="200">
+          <template slot-scope="scope">
+            <i class="el-icon-time"></i>
+            <span style="margin-left: 10px">{{ scope.row.loginDate }}</span>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="操作" width="100">
-          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <template slot-scope="scope">
+            <el-button size="mini" type="danger" @click="removeLoginRecord(scope.row)">删除</el-button>
+          </template>
         </el-table-column>
       </el-table>
+
       <el-pagination
         class="pagination"
         layout="total, prev, pager, next, jumper"
-        :total="1000"
-        :page-size="100"
-        :current-page.sync="currentPage"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange">
+        :total="pagination.total"
+        :page-size="pagination.params['page-size']"
+        :current-page.sync="pagination.params['page-index']"
+        @size-change="pageLoginRecord"
+        @current-change="pageLoginRecord">
       </el-pagination>
     </div>
   </div>
 </template>
 
 <script>
+  import { pageLoginRecord, findLoginRecordByName, removeLoginRecord } from '@/network/login-mgmt'
+
   export default {
     name: 'LoginManagement',
     data() {
       return {
         searchName: '',
         loginRecords: [],
-        currentPage: 1
+        pagination: {
+          total: 0,
+          params: {
+            'page-index': 1,
+            'page-size': 10
+          }
+        }
       }
     },
     methods: {
-      handleDelete() {},
-      handleSizeChange() {},
-      handleCurrentChange() {}
+      assignLoginRecordPagination(response) {
+        this.loginRecords = response.data.data.loginRecords
+        this.pagination = {
+          total: response.data.data.total,
+          params: {
+            'page-index': response.data.data.pageIndex,
+            'page-size': response.data.data.pageSize
+          }
+        }
+      },
+      searchLoginRecord() {
+        findLoginRecordByName(this.searchName, this.pagination.params).then(response => this.assignLoginRecordPagination(response))
+      },
+      pageLoginRecord() {
+        pageLoginRecord(this.pagination.params).then(response => this.assignLoginRecordPagination(response))
+      },
+      removeLoginRecord(loginRecord) {
+        this.$confirm('登录记录删除后不可恢复，请问是否删除？')
+            .then(_ => removeLoginRecord(loginRecord.id).then(_ => this.pageLoginRecord())) // eslint-disable-line no-unused-vars
+            .catch(_ => {}) // eslint-disable-line no-unused-vars
+      }
     },
     created() {
-      for (let i = 0; i < 20; i++) {
-        this.loginRecords.push({ id: i + 1, name: '张三', ip: '127.0.0.1', ipCity: '深圳', loginCount: 10, lastLoginDate: '2023-01-01 00:00:00', latestLoginDate: '2023-01-01 00:00:00' })
-      }
+      this.pageLoginRecord()
     }
   }
 </script>
