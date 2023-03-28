@@ -4,18 +4,18 @@
       <el-input placeholder="请输入用户名称" v-model="searchName" prefix-icon="el-icon-search" clearable class="input" @keyup.enter.native="searchLoginRecord" />
 
       <el-table :data="loginRecords" border stripe>
-        <el-table-column align="center" prop="id" label="ID" width="80" />
-        <el-table-column align="center" prop="username" label="用户名称" width="150" />
-        <el-table-column align="center" prop="ipAddress" label="IP地址" width="150" />
-        <el-table-column align="center" prop="ipProvince" label="IP地址所属省份" width="150" />
-        <el-table-column align="center" prop="ipCity" label="IP地址所属城市" width="150" />
-        <el-table-column align="center" label="登录时间" width="200">
+        <el-table-column show-overflow-tooltip align="center" prop="id" label="ID" width="80" />
+        <el-table-column show-overflow-tooltip align="center" prop="username" label="用户名称" width="150" />
+        <el-table-column show-overflow-tooltip align="center" prop="ipAddress" label="IP地址" width="150" />
+        <el-table-column show-overflow-tooltip align="center" prop="ipProvince" label="IP地址所属省份" width="150" />
+        <el-table-column show-overflow-tooltip align="center" prop="ipCity" label="IP地址所属城市" width="150" />
+        <el-table-column show-overflow-tooltip align="center" label="登录时间" width="200">
           <template slot-scope="scope">
             <i class="el-icon-time"></i>
             <span style="margin-left: 10px">{{ scope.row.loginDate }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作" width="100">
+        <el-table-column show-overflow-tooltip align="center" label="操作" width="100">
           <template slot-scope="scope">
             <el-button size="mini" type="danger" @click="removeLoginRecord(scope.row)">删除</el-button>
           </template>
