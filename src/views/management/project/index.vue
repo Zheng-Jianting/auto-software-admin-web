@@ -5,27 +5,27 @@
 
       <el-table :data="projects" border stripe>
         <el-table-column align="center" prop="id" label="ID" width="155" />
-        <el-table-column align="center" prop="username" label="用户名称" width="160" />
-        <el-table-column align="center" prop="projectName" label="项目名称" width="200" />
-        <el-table-column align="center" prop="fromModule" label="模块来源" width="140" />
-        <el-table-column align="center" label="创建时间" width="200">
+        <el-table-column show-overflow-tooltip align="center" prop="username" label="用户名称" width="160" />
+        <el-table-column show-overflow-tooltip align="center" prop="projectName" label="项目名称" width="200" />
+        <el-table-column show-overflow-tooltip align="center" prop="fromModule" label="模块来源" width="140" />
+        <el-table-column show-overflow-tooltip align="center" label="创建时间" width="200">
           <template slot-scope="scope">
             <i class="el-icon-time"></i>
             <span style="margin-left: 10px">{{ scope.row.created }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="updated" label="最后更新时间" width="200">
+        <el-table-column show-overflow-tooltip align="center" prop="updated" label="最后更新时间" width="200">
           <template slot-scope="scope">
             <i class="el-icon-time"></i>
             <span style="margin-left: 10px">{{ scope.row.updated }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="status" label="状态" width="100">
+        <el-table-column show-overflow-tooltip align="center" prop="status" label="状态" width="100">
           <template slot-scope="scope">
             {{ scope.row.status === 1 ? '启用' : '禁用' }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作" width="300">
+        <el-table-column show-overflow-tooltip align="center" label="操作" width="300">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="viewProjectRecord(scope.row)">详情</el-button>
             <el-button size="mini" type="primary" @click="openUpdateProjectDialog(scope.row)">编辑</el-button>
@@ -132,13 +132,11 @@
       },
       cancelUpdateProject() {
         this.updateProjectDialogVisible = false
-        this.pageProject()
       },
       confirmUpdateProject() {
         this.updateProjectDialogVisible = false
         updateProjectBasicInfo(this.updateProject).then(_ => this.pageProject()) // eslint-disable-line no-unused-vars
       },
-      updateProjectBasicInfo() {},
       downloadProject() {},
       deleteProject(project) {
         this.$confirm('项目删除后不可恢复，请问是否删除？')
@@ -168,7 +166,7 @@
   }
 
   .input {
-    width: 16%;
+    width: 15%;
     margin-top: 15px;
     margin-bottom: 10px;
   }

@@ -6,28 +6,28 @@
           <span>{{ scope.row.recordId }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="记录名称" width="240">
+      <el-table-column show-overflow-tooltip align="center" label="记录名称" width="240">
         <template slot-scope="scope">
           <span>{{ scope.row.recordName }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="需求文本" width="240">
+      <el-table-column show-overflow-tooltip align="center" label="需求文本" width="240">
         <template slot-scope="scope">
           <span>{{ scope.row.text }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="分析结果" width="240" show-overflow-tooltip>
+      <el-table-column show-overflow-tooltip align="center" label="分析结果" width="240">
         <template slot-scope="scope">
           <span>{{ scope.row.recordData }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="最后更新时间" width="200">
+      <el-table-column show-overflow-tooltip align="center" label="最后更新时间" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
           <span style="margin-left: 10px">{{ scope.row.updated }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="180">
+      <el-table-column show-overflow-tooltip align="center" label="操作" width="180">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="openUpdateRecordDialog(scope.row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="deleteProjectRecord(scope.row)">删除</el-button>
@@ -118,7 +118,6 @@
       },
       cancelUpdateRecord() {
         this.updateRecordDialogVisible = false
-        this.pageProjectRecord()
       },
       confirmUpdateRecord() {
         this.updateRecordDialogVisible = false
