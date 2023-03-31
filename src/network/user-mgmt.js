@@ -52,3 +52,35 @@ export function assignRole(userId, roleIdList) {
     data: { userId, roleIdList }
   })
 }
+
+// Role Management
+
+export function pageRole(params) {
+  return request({
+    url: baseURL + '/api/role',
+    method: 'get',
+    params
+  })
+}
+
+export function getEditRoleDialogInfo(id) {
+  return request({
+    url: baseURL + '/api/role/' + id,
+    method: 'get'
+  })
+}
+
+export function editRoleAndPermission(params) {
+  return request({
+    url: baseURL + '/api/role',
+    method: 'post',
+    data: params
+  })
+}
+
+export function removeRole(id) {
+  return request({
+    url: baseURL + '/api/role/' + id,
+    method: 'delete'
+  })
+}
