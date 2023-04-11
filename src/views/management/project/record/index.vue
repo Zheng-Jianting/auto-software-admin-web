@@ -27,7 +27,7 @@
         activeModule: 'mindMap',
         tabMapOptions: [
           { key: 'mindMap', label: '思维导图' },
-          { key: 'useCaseDiagram', label: '用例图' },
+          { key: 'usercaseDiagram', label: '用例图' },
           { key: 'activityDiagram', label: '活动图' },
           { key: 'erDiagram', label: 'ER图' },
           { key: 'uiDiagram', label: 'UI组件布局图' },
