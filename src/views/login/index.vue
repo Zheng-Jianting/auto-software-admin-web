@@ -1,9 +1,5 @@
 <template>
   <div class="body">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap">
-
     <div class="section">
       <div class="container">
         <div class="row full-height justify-content-center">
@@ -16,17 +12,14 @@
                       <div class="section text-center">
                         <h4 class="mb-4 pb-3">Log In</h4>
                         <div class="form-group">
-                          <input type="text" name="logeuser" class="form-style" placeholder="Your Username" id="loguser" autocomplete="off">
+                          <input v-model="loginForm.username" type="text" name="logeuser" class="form-style" placeholder="Your Username" id="loguser" autocomplete="off">
                           <i class="input-icon uil uil-user"></i>
                         </div>  
                         <div class="form-group mt-2">
-                          <input type="password" name="logpass" class="form-style" placeholder="Your Password" id="logpass" autocomplete="off">
+                          <input v-model="loginForm.password" type="password" name="logpass" class="form-style" placeholder="Your Password" id="logpass" autocomplete="off">
                           <i class="input-icon uil uil-lock-alt"></i>
                         </div>
                         <a href="#" class="btn mt-4" @click.prevent="submit">submit</a>
-                          <p class="mb-0 mt-4 text-center">
-                            <a href="#0" class="link">Forgot your password?</a>
-                          </p>
                       </div>
                     </div>
                   </div>
@@ -41,15 +34,35 @@
 </template>
 
 <script>
+  import { login } from '@/network/admin-common'
+
   export default {
     name: 'Login',
+    data() {
+      return {
+        loginForm: {
+          username: '',
+          password: ''
+        }
+      }
+    },
     methods: {
       submit() {
-        this.$router.push('/dashboard')
+        login(this.loginForm).then(response => {
+          this.$router.push('/dashboard')
+          this.$store.commit('SET_USER', response.data.data.user)
+          this.$store.commit('SET_TOKEN', response.headers['authorization'])
+          this.$store.commit('SET_ROLE_PERMISSION', response.data.data.rolePermission)
+        })
+        .catch(_ => this.$message.error('登录失败，用户名或密码错误')) // eslint-disable-line no-unused-vars
       }
     }
   }
 </script>
+
+<style scoped src="@/styles/login/bootstrap.min.css"></style>
+<style scoped src="@/styles/login/css2.css"></style>
+<style scoped src="@/styles/login/unicons.css"></style>
 
 <style scoped>
   .body {
