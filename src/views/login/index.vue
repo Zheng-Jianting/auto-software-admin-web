@@ -16,7 +16,7 @@
                           <i class="input-icon uil uil-user"></i>
                         </div>  
                         <div class="form-group mt-2">
-                          <input v-model="loginForm.password" type="password" name="logpass" class="form-style" placeholder="Your Password" id="logpass" autocomplete="off">
+                          <input v-model="loginForm.password" type="password" name="logpass" class="form-style" placeholder="Your Password" id="logpass" autocomplete="off" @keyup.enter="submit">
                           <i class="input-icon uil uil-lock-alt"></i>
                         </div>
                         <a href="#" class="btn mt-4" @click.prevent="submit">submit</a>

@@ -1,7 +1,7 @@
 <template>
   <div class="flex-center">
     <div class="content">
-      <el-button class="addRoleButton" size="mini" type="primary" @click="addRole()">新增角色</el-button>
+      <el-button class="addRoleButton" size="mini" type="primary" @click="createRole()">新增角色</el-button>
       
       <el-table :data="roles" border stripe>
         <el-table-column show-overflow-tooltip align="center" prop="id" label="ID" width="80px" />
@@ -100,7 +100,9 @@
       }
     },
     methods: {
-      addRole() {},
+      createRole() {
+        if (!this.checkPermission('create-role', '创建角色')) return
+      },
       assignRolePagination(response) {
         this.roles = response.data.data.roles
         this.pagination = {
@@ -112,9 +114,11 @@
         }
       },
       pageRole() {
+        if (!this.checkPermission('page-role', '查看角色列表')) return
         pageRole(this.pagination.params).then(response => this.assignRolePagination(response))
       },
       openEditRolePermissionDialog(role) {
+        if (!this.checkPermission('edit-role-and-permission', '编辑角色及其权限信息')) return
         this.editRole = role
         this.editRolePermissionDialogVisible = true
         getEditRoleDialogInfo(role.id).then(response => {
@@ -135,6 +139,7 @@
         editRoleAndPermission(params).then(_ => this.pageRole()) // eslint-disable-line no-unused-vars
       },
       removeRole(role) {
+        if (!this.checkPermission('remove-role', '删除角色')) return
         this.$confirm('角色删除后不可恢复，请问是否删除？')
             .then(_ => removeRole(role.id).then(_ => this.pageRole())) // eslint-disable-line no-unused-vars
             .catch(_ => {}) // eslint-disable-line no-unused-vars

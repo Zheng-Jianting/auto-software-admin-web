@@ -8,8 +8,11 @@ import '@/styles/index.scss'
 import 'normalize.css/normalize.css'
 
 import App from './App'
+import mixin from './mixin'
 import store from './store'
 import router from './router'
+
+Vue.mixin(mixin)
 
 Vue.use(ElementUI)
 

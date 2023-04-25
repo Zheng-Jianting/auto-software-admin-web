@@ -128,12 +128,15 @@
         }
       },
       searchUser() {
+        if (!this.checkPermission('find-user-by-name', '根据用户名称查询用户列表')) return
         findUserByName(this.searchName, this.pagination.params).then(response => this.assignUserPagination(response))
       },
       pageUser() {
+        if (!this.checkPermission('page-user', '查看用户列表')) return
         pageUser(this.pagination.params).then(response => this.assignUserPagination(response))
       },
       openUpdateUserDialog(user) {
+        if (!this.checkPermission('update-user', '编辑用户信息')) return
         this.updateUser = user
         this.updateUserDialogVisible = true
       },
@@ -145,11 +148,13 @@
         updateUser(this.updateUser).then(_ => this.pageUser()) // eslint-disable-line no-unused-vars
       },
       removeUser(user) {
+        if (!this.checkPermission('remove-user', '删除用户')) return
         this.$confirm('用户删除后不可恢复，请问是否删除？')
             .then(_ => removeUser(user.id).then(_ => this.pageUser())) // eslint-disable-line no-unused-vars
             .catch(_ => {}) // eslint-disable-line no-unused-vars
       },
       openAssignRoleDialog(user) {
+        if (!this.checkPermission('assign-role', '赋予用户角色')) return
         this.assignRoleUser = user
         listAssignRole(user.id).then(response => {
           this.assignRoles = response.data.data

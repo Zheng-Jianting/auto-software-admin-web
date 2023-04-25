@@ -113,6 +113,7 @@
         this.loading = false
       },
       openUpdateRecordDialog(record) {
+        if (!this.checkPermission('update-project-record', '编辑项目某个模块下的分析记录')) return
         this.updateRecord = record
         this.updateRecordDialogVisible = true
       },
@@ -124,6 +125,7 @@
         updateProjectRecord(this.updateRecord).then(_ => this.pageProjectRecord()) // eslint-disable-line no-unused-vars
       },
       deleteProjectRecord(record) {
+        if (!this.checkPermission('delete-project-record', '删除项目某个模块下的分析记录')) return
         this.$confirm('项目的分析记录删除后不可恢复，请问是否删除？')
             .then(_ => deleteProjectRecord(this.project.id, this.activeModule, record.recordId).then(_ => this.pageProjectRecord())) // eslint-disable-line no-unused-vars
             .catch(_ => {}) // eslint-disable-line no-unused-vars

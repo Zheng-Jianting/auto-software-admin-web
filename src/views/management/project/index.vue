@@ -114,12 +114,15 @@
         }
       },
       serchProject() {
+        if (!this.checkPermission('find-project-by-name', '根据项目名称查询项目列表')) return
         findProjectByName(this.searchProjectName, this.pagination.params).then(response => this.assignProjectPagination(response))
       },
       pageProject() {
+        if (!this.checkPermission('page-project', '查看项目列表')) return
         pageProject(this.pagination.params).then(response => this.assignProjectPagination(response))
       },
       viewProjectRecord(project) {
+        if (!this.checkPermission('page-project-record', '查看项目某个模块下的分析记录列表')) return
         this.$router.push({
           name: 'ProjectRecord',
           query: { id: project.id, module: 'mindMap' }, // just let url display project id and active module
@@ -127,6 +130,7 @@
         })
       },
       openUpdateProjectDialog(project) {
+        if (!this.checkPermission('update-project-basic-info', '编辑项目基本信息')) return
         this.updateProject = project
         this.updateProjectDialogVisible = true
       },
@@ -137,8 +141,11 @@
         this.updateProjectDialogVisible = false
         updateProjectBasicInfo(this.updateProject).then(_ => this.pageProject()) // eslint-disable-line no-unused-vars
       },
-      downloadProject() {},
+      downloadProject() {
+        if (!this.checkPermission('download-project', '下载项目')) return
+      },
       deleteProject(project) {
+        if (!this.checkPermission('delete-project', '删除项目')) return
         this.$confirm('项目删除后不可恢复，请问是否删除？')
             .then(_ => deleteProject(project.id).then(_ => this.pageProject())) // eslint-disable-line no-unused-vars
             .catch(_ => {}) // eslint-disable-line no-unused-vars

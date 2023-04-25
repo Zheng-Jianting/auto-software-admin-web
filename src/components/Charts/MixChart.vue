@@ -245,6 +245,8 @@
         })
       },
       initStatistics() {
+        if (!this.checkPermission('check-statistics', '查看系统统计信息')) return
+
         statistics().then(response => {
           this.viewCount = response.data.data.viewCount
           this.userCount = response.data.data.userCount

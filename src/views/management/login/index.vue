@@ -65,12 +65,15 @@
         }
       },
       searchLoginRecord() {
+        if (!this.checkPermission('find-login-record-by-name', '根据用户名称查询前台系统登录记录')) return
         findLoginRecordByName(this.searchName, this.pagination.params).then(response => this.assignLoginRecordPagination(response))
       },
       pageLoginRecord() {
+        if (!this.checkPermission('page-login-record', '查看前台系统登录记录')) return
         pageLoginRecord(this.pagination.params).then(response => this.assignLoginRecordPagination(response))
       },
       removeLoginRecord(loginRecord) {
+        if (!this.checkPermission('remove-login-record', '删除前台系统登录记录')) return
         this.$confirm('登录记录删除后不可恢复，请问是否删除？')
             .then(_ => removeLoginRecord(loginRecord.id).then(_ => this.pageLoginRecord())) // eslint-disable-line no-unused-vars
             .catch(_ => {}) // eslint-disable-line no-unused-vars
