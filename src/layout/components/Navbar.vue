@@ -12,13 +12,13 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
+          <router-link to="/dashboard">
             <el-dropdown-item>
-              Home
+              首页
             </el-dropdown-item>
           </router-link>
           <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
+            <span style="display:block;">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+  import { logout } from '@/network/admin-common'
   import { mapGetters } from 'vuex'
   import Breadcrumb from '@/components/Breadcrumb'
   import Hamburger from '@/components/Hamburger'
@@ -46,8 +47,11 @@
       toggleSideBar() {
         this.$store.dispatch('app/toggleSideBar')
       },
-      async logout() {
-        
+      logout() {
+        logout().then(_ => { // eslint-disable-line no-unused-vars
+          localStorage.clear()
+          this.$router.push('/')
+        })
       }
     }
   }
