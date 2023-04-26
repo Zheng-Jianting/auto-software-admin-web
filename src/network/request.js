@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Message } from 'element-ui'
 
 export default function request(config) {
   const instance = axios.create({
@@ -20,13 +21,25 @@ export default function request(config) {
 
   instance.interceptors.response.use(
     (response) => {
-      const data = response.data
-      console.log('status code from response line ' + response.status)
-      console.log('customized status code from server ' + data.code)
+      const errMsg = response.data && response.data.message ? response.data.message : '系统异常'
+
+      if (response.status != 200) {
+        Message.error(errMsg)
+        return Promise.reject(errMsg)
+      }
+
+      if (response.data.code != 200) {
+        Message.error(errMsg)
+        return Promise.reject(errMsg)
+      }
+
       return response
     },
     (error) => {
-      console.log('error occur when receive response')
+      if (error.response && error.response.data && error.response.data.message) {
+        error.message = error.response.data.message
+      }
+      Message.error(error.message)
       return Promise.reject(error)
     }
   )
