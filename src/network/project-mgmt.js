@@ -28,6 +28,13 @@ export function updateProjectBasicInfo(newProject) {
   })
 }
 
+export function downloadProject(id) {
+  return request({
+    url: baseURL + '/api/project/' + id + '/download',
+    method: 'get'
+  })
+}
+
 export function deleteProject(id) {
   return request({
     url: baseURL + '/api/project/' + id,

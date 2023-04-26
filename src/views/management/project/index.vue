@@ -141,8 +141,17 @@
         this.updateProjectDialogVisible = false
         updateProjectBasicInfo(this.updateProject).then(_ => this.pageProject()) // eslint-disable-line no-unused-vars
       },
-      downloadProject() {
+      downloadProject(project) {
         if (!this.checkPermission('download-project', '下载项目')) return
+        downloadProject(project.id).then(response => {
+          let blob = new Blob([JSON.stringify(response.data, null, 2)], { type : 'text/plain' })
+          let url = window.URL.createObjectURL(blob)
+          let a = document.createElement('a')
+          a.href = url
+          a.download = project.projectName + '.txt'
+          a.click()
+          window.URL.revokeObjectURL(url)
+        })
       },
       deleteProject(project) {
         if (!this.checkPermission('delete-project', '删除项目')) return
