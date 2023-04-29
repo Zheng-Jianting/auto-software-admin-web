@@ -1,6 +1,6 @@
 import request from './request'
 
-const baseURL = 'http://localhost:8003'
+const baseURL = 'http://localhost:9000/project-mgmt'
 
 // Project Management
 
