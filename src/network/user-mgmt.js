@@ -1,6 +1,6 @@
 import request from './request'
 
-const baseURL = 'http://localhost:8002'
+const baseURL = 'http://localhost:9000/user-mgmt'
 
 // User Management
 
