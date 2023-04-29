@@ -29,7 +29,7 @@
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="viewProjectRecord(scope.row)">详情</el-button>
             <el-button size="mini" type="primary" @click="openUpdateProjectDialog(scope.row)">编辑</el-button>
-            <el-button size="mini" type="primary" @click="downloadProject">下载</el-button>
+            <el-button size="mini" type="primary" @click="downloadProject(scope.row)">下载</el-button>
             <el-button size="mini" type="danger" @click="deleteProject(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -83,7 +83,7 @@
 </template>
 
 <script>
-  import { pageProject, findProjectByName, updateProjectBasicInfo, deleteProject } from '@/network/project-mgmt'
+  import { pageProject, findProjectByName, updateProjectBasicInfo, downloadProject, deleteProject } from '@/network/project-mgmt'
 
   export default {
     name: 'ProjectManagement',
