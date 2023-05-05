@@ -1,7 +1,7 @@
 <template>
   <div class="flex-center">
     <div class="content">
-      <el-button class="addRoleButton" size="mini" type="primary" @click="createRole()">新增角色</el-button>
+      <el-button class="addRoleButton" size="mini" type="primary" @click="openCreateRoleDialog()">新增角色</el-button>
       
       <el-table :data="roles" border stripe>
         <el-table-column show-overflow-tooltip align="center" prop="id" label="ID" width="80px" />
@@ -38,6 +38,40 @@
         @current-change="pageRole">
       </el-pagination>
     </div>
+
+    <el-dialog width="35%" title="创建角色" :visible.sync="createRoleDialogVisible" @close="pageRole">
+      <el-scrollbar style="height: 650px;">
+        <el-form :model="createRole">
+          <el-form-item label="角色编码" label-width="150px">
+            <el-input style="width: 80%;" v-model="createRole.roleCode" />
+          </el-form-item>
+          <el-form-item label="角色名称" label-width="150px">
+            <el-input style="width: 80%;" v-model="createRole.roleName" />
+          </el-form-item>
+          <el-form-item label="角色描述" label-width="150px">
+            <el-input style="width: 80%;" v-model="createRole.description" />
+          </el-form-item>
+
+          <el-form-item label="角色权限" label-width="150px">
+            <el-tree
+              ref="createFlatPermissionTree"
+              style="margin-top: 6px;"
+              node-key="id"
+              show-checkbox
+              :data="createRolePermissionTree.flatPermissionTree"
+              :props="{ label: 'description' }"
+              :default-checked-keys="createRolePermissionTree.checkedKeys"
+              :default-expanded-keys="createRolePermissionTree.expandedKeys">
+            </el-tree>
+          </el-form-item>
+        </el-form>
+      </el-scrollbar>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancelCreateRole">取消</el-button>
+        <el-button type="primary" @click="confirmCreateRole">确定</el-button>
+      </div>
+    </el-dialog>
 
     <el-dialog width="35%" title="编辑角色及其权限信息" :visible.sync="editRolePermissionDialogVisible" @close="pageRole">
       <el-scrollbar style="height: 650px;">
@@ -76,7 +110,7 @@
 </template>
 
 <script>
-  import { pageRole, getEditRoleDialogInfo, editRoleAndPermission, removeRole } from '@/network/user-mgmt'
+  import { getCreateRoleDialogInfo, createRole, pageRole, getEditRoleDialogInfo, editRoleAndPermission, removeRole } from '@/network/user-mgmt'
 
   export default {
     name: 'RoleList',
@@ -90,6 +124,13 @@
             'page-size': 10
           }
         },
+        createRole: {},
+        createRoleDialogVisible: false,
+        createRolePermissionTree: {
+          flatPermissionTree: [],
+          checkedKeys: [],
+          expandedKeys: []
+        },
         editRole: {},
         editRolePermissionDialogVisible: false,
         rolePermissionTree: {
@@ -100,8 +141,25 @@
       }
     },
     methods: {
-      createRole() {
+      openCreateRoleDialog() {
         if (!this.checkPermission('create-role', '创建角色')) return
+        this.createRole = {}
+        this.createRoleDialogVisible = true
+        getCreateRoleDialogInfo().then(response => {
+          this.createRolePermissionTree.flatPermissionTree = response.data.data.flatPermissionTree.children
+          this.createRolePermissionTree.expandedKeys = response.data.data.expandedKeys
+        })
+      },
+      cancelCreateRole() {
+        this.createRoleDialogVisible = false
+      },
+      confirmCreateRole() {
+        this.createRoleDialogVisible = false
+        const params = {
+          role: this.createRole,
+          checkedKeys: this.$refs.createFlatPermissionTree.getCheckedKeys(true)
+        }
+        createRole(params).then(_ => this.pageRole()) // eslint-disable-line no-unused-vars
       },
       assignRolePagination(response) {
         this.roles = response.data.data.roles

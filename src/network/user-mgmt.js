@@ -55,6 +55,21 @@ export function assignRole(userId, roleIdList) {
 
 // Role Management
 
+export function getCreateRoleDialogInfo() {
+  return request({
+    url: baseURL + '/api/role/create',
+    method: 'get'
+  })
+}
+
+export function createRole(params) {
+  return request({
+    url: baseURL + '/api/role/create',
+    method: 'post',
+    data: params
+  })
+}
+
 export function pageRole(params) {
   return request({
     url: baseURL + '/api/role',
