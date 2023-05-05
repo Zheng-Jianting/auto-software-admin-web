@@ -1,6 +1,6 @@
 import request from './request'
 
-const baseURL = 'http://localhost:8005'
+const baseURL = 'http://localhost:9000/admin-common'
 
 // Login Interface
 
