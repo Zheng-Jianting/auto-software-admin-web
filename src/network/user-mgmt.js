@@ -1,6 +1,6 @@
 import request from './request'
 
-const baseURL = 'http://localhost:8002'
+const baseURL = 'http://localhost:9000/user-mgmt'
 
 // User Management
 
@@ -54,6 +54,21 @@ export function assignRole(userId, roleIdList) {
 }
 
 // Role Management
+
+export function getCreateRoleDialogInfo() {
+  return request({
+    url: baseURL + '/api/role/create',
+    method: 'get'
+  })
+}
+
+export function createRole(params) {
+  return request({
+    url: baseURL + '/api/role/create',
+    method: 'post',
+    data: params
+  })
+}
 
 export function pageRole(params) {
   return request({
